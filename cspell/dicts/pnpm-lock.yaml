@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@cspell/dict-cpp':
-        specifier: ^6.0.9
-        version: 6.0.9
+        specifier: ^6.0.12
+        version: 6.0.12
       '@cspell/dict-node':
         specifier: ^5.0.8
         version: 5.0.8
@@ -21,13 +21,13 @@ importers:
         specifier: ^3.2.3
         version: 3.2.3
       '@cspell/dict-vim':
-        specifier: ^1.0.8
-        version: 1.0.8
+        specifier: ^1.0.10
+        version: 1.0.10
 
 packages:
 
-  '@cspell/dict-cpp@6.0.9':
-    resolution: {integrity: sha512-Xdq9MwGh0D5rsnbOqFW24NIClXXRhN11KJdySMibpcqYGeomxB2ODFBuhj1H7azO7kVGkGH0Okm4yQ2TRzBx0g==}
+  '@cspell/dict-cpp@6.0.12':
+    resolution: {integrity: sha512-N4NsCTttVpMqQEYbf0VQwCj6np+pJESov0WieCN7R/0aByz4+MXEiDieWWisaiVi8LbKzs1mEj4ZTw5K/6O2UQ==}
 
   '@cspell/dict-data-science@2.0.9':
     resolution: {integrity: sha512-wTOFMlxv06veIwKdXUwdGxrQcK44Zqs426m6JGgHIB/GqvieZQC5n0UI+tUm5OCxuNyo4OV6mylT4cRMjtKtWQ==}
@@ -41,12 +41,12 @@ packages:
   '@cspell/dict-typescript@3.2.3':
     resolution: {integrity: sha512-zXh1wYsNljQZfWWdSPYwQhpwiuW0KPW1dSd8idjMRvSD0aSvWWHoWlrMsmZeRl4qM4QCEAjua8+cjflm41cQBg==}
 
-  '@cspell/dict-vim@1.0.8':
-    resolution: {integrity: sha512-LUnznQiaNatVfb89pu916qYJwbkvgTKyNXK17MRHm1AgcCxN5Z1V5hyqTlQumhQYVAFFvN8t9VQDUw6k47spiw==}
+  '@cspell/dict-vim@1.0.10':
+    resolution: {integrity: sha512-eP+bKOr/nhxYQJuBM8e5Kj33dwJcfo5MTcKYd9WOEJ68qNrGXzfcZtlNmuncTTRQmS8k90Khl6JNZGSANwevig==}
 
 snapshots:
 
-  '@cspell/dict-cpp@6.0.9': {}
+  '@cspell/dict-cpp@6.0.12': {}
 
   '@cspell/dict-data-science@2.0.9': {}
 
@@ -58,4 +58,4 @@ snapshots:
 
   '@cspell/dict-typescript@3.2.3': {}
 
-  '@cspell/dict-vim@1.0.8': {}
+  '@cspell/dict-vim@1.0.10': {}

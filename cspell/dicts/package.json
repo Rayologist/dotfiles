@@ -1,9 +1,9 @@
 {
 	"dependencies": {
-		"@cspell/dict-cpp": "^6.0.9",
+		"@cspell/dict-cpp": "^6.0.12",
 		"@cspell/dict-node": "^5.0.8",
 		"@cspell/dict-python": "^4.2.19",
 		"@cspell/dict-typescript": "^3.2.3",
-		"@cspell/dict-vim": "^1.0.8"
+		"@cspell/dict-vim": "^1.0.10"
 	}
 }
