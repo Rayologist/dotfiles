@@ -10,6 +10,8 @@ vim.opt.pumheight = 10
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
+vim.opt.autoread = true
+
 -- indent will be handled by the plugin: indent-o-matic
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4

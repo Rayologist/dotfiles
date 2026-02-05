@@ -33,6 +33,15 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+          library = {
+            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          },
+        },
+      },
+      {
         "mason-org/mason.nvim",
         opts = {},
       },
@@ -45,7 +54,8 @@ return {
         },
       },
       "WhoIsSethDaniel/mason-tool-installer.nvim",
-      "hrsh7th/cmp-nvim-lsp",
+      -- "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
       {
         "antosha417/nvim-lsp-file-operations",
         dependencies = {
@@ -177,6 +187,7 @@ return {
                   select = {
                     "docker-compose.yml",
                     "GitHub Workflow",
+                    "Taskfile config",
                   },
                 }),
                 redhat = { telemetry = { enabled = false } },
@@ -189,7 +200,7 @@ return {
                   schemaStore = {
                     -- Must disable built-in schemaStore support to use
                     -- schemas from SchemaStore.nvim plugin
-                    enable = false,
+                    enable = true,
                     -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
                     url = "",
                   },
@@ -198,7 +209,9 @@ return {
             },
           },
           lua_ls = {},
+          terraformls = {},
           eslint = {},
+          tflint = {},
           ts_ls = {},
           gopls = {},
           html = {},
@@ -263,17 +276,16 @@ return {
         ensure_installed = ensure_installed,
       })
 
-      local cmp_nvim_lsp = require("cmp_nvim_lsp")
+      -- local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
+      local blink_cmp = require("blink.cmp")
       for ls, cfg in pairs(enabled_ls) do
-        local capabilities = cmp_nvim_lsp.default_capabilities()
+        -- local capabilities = cmp_nvim_lsp.default_capabilities()
         local lspconfig = cfg.lspconfig or {}
-
-        if lspconfig.capabilities then
-          capabilities = vim.tbl_deep_extend("force", {}, capabilities, lspconfig.capabilities)
-        end
-
-        lspconfig.capabilities = capabilities
+        -- if lspconfig.capabilities then
+        --   capabilities = vim.tbl_deep_extend("force", {}, capabilities, lspconfig.capabilities)
+        -- end
+        lspconfig.capabilities = blink_cmp.get_lsp_capabilities(lspconfig.capabilities)
 
         vim.lsp.config(ls, lspconfig)
       end

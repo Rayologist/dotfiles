@@ -99,18 +99,18 @@ local function multi_grep(opts)
           return 1
         end,
 
-        highlighter = function(_, prompt, display)
-          local fzy = require("telescope.algos.fzy")
-          local parsed = parse_prompt(prompt)
-
-          if not parsed then
-            return fzy.positions("", display)
-          end
-
-          local pattern = unpack(parsed)
-
-          return fzy.positions(pattern, display)
-        end,
+        -- highlighter = function(_, prompt, display)
+        --   local fzy = require("telescope.algos.fzy")
+        --   local parsed = parse_prompt(prompt)
+        --
+        --   if not parsed then
+        --     return fzy.positions("", display)
+        --   end
+        --
+        --   local pattern = unpack(parsed)
+        --
+        --   return fzy.positions(pattern, display)
+        -- end,
       }),
     })
     :find()

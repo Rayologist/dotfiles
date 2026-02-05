@@ -12,6 +12,7 @@ return {
   ---@type neotree.Config
   opts = {
     enable_diagnostics = false,
+    close_if_last_window = true,
     open_files_do_not_replace_types = { "terminal", "trouble", "qf" },
     popup_border_style = "rounded",
     window = {
@@ -80,6 +81,14 @@ return {
           "thumbs.db",
           ".git",
         },
+      },
+    },
+    event_handlers = {
+      {
+        event = "file_opened",
+        handler = function()
+          require("neo-tree.command").execute({ action = "close" })
+        end,
       },
     },
   },

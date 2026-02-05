@@ -36,7 +36,7 @@ return {
     -- end
     local keys = {
       {
-        "<leader>ah",
+        "<leader>ha",
         function()
           require("harpoon"):list():add()
         end,

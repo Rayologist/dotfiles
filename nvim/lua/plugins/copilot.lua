@@ -4,18 +4,13 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     opts = {
-      copilot_model = "gpt-4o-copilot",
       suggestion = {
         auto_trigger = true,
         keymap = {
-          accept = "<C-y>",
+          accept = "<Tab>",
           dismiss = "<C-n>",
         },
       },
     },
-  },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    opts = {},
   },
 }

@@ -16,19 +16,20 @@ return {
       mason = true,
       fidget = true,
       harpoon = true,
-      native_lsp = {
-        enabled = true,
-        underlines = {
-          errors = { "undercurl" },
-          hints = { "undercurl" },
-          warnings = { "undercurl" },
-          information = { "undercurl" },
-        },
-      },
+      diffview = true,
+      blink_cmp = true,
       indent_blankline = {
         enabled = false,
         -- scope_color = 'text',
         -- colored_indent_levels = false,
+      },
+    },
+    lsp_styles = {
+      underlines = {
+        errors = { "undercurl" },
+        hints = { "undercurl" },
+        warnings = { "undercurl" },
+        information = { "undercurl" },
       },
     },
     custom_highlights = function(colors)

@@ -64,6 +64,9 @@ return {
           "git_rebase",
           "gitignore",
           "gitattributes",
+
+          "terraform",
+          "hcl",
         },
         modules = {},
         ignore_install = {},

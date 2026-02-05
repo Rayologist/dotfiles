@@ -1,158 +1,183 @@
 return {
-  "hrsh7th/nvim-cmp",
-  dependencies = {
-    {
-      "folke/lazydev.nvim",
-      ft = "lua",
-      opts = {
-        library = {
-          { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+  {
+    "saghen/blink.cmp",
+    version = "1.*",
+    dependencies = {
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+        opts = {
+          history = true,
+          delete_check_events = "TextChanged",
+        },
+      },
+      "rafamadriz/friendly-snippets",
+      "onsails/lspkind.nvim",
+    },
+    ---@module "blink.cmp"
+    ---@type blink.cmp.Config
+    opts = {
+      keymap = {
+        preset = "none",
+        ["<C-i>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-e>"] = { "hide" },
+        ["<C-y>"] = { "select_and_accept" },
+        ["<C-j>"] = { "select_next" },
+        ["<C-k>"] = { "select_prev" },
+        ["<C-d>"] = { "scroll_documentation_down" },
+        ["<C-u>"] = { "scroll_documentation_up" },
+        ["<Tab>"] = { "fallback" },
+      },
+      snippets = {
+        preset = "luasnip",
+      },
+      signature = {
+        enabled = true,
+      },
+      completion = {
+        menu = {
+          draw = {
+            columns = {
+              { "kind_icon" },
+              { "label", "label_description", gap = 1 },
+              { "source_name" },
+            },
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  return require("lspkind").presets.codicons[ctx.kind] or ""
+                end,
+              },
+            },
+          },
+        },
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
+          },
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 100,
+        },
+        ghost_text = {
+          enabled = false,
+        },
+      },
+      sources = {
+        default = function()
+          local success, node = pcall(vim.treesitter.get_node)
+
+          local string_node_types = {
+            "string",
+            "string_content",
+            "character",
+            "string_literal",
+          }
+
+          if success and node and vim.tbl_contains(string_node_types, node:type()) then
+            return { "buffer", "snippets" }
+          end
+
+          return { "lazydev", "lsp", "path", "snippets", "buffer" }
+        end,
+        providers = {
+          lazydev = {
+            name = "[LZDV]",
+            module = "lazydev.integrations.blink",
+            score_offset = 100,
+          },
+          lsp = {
+            name = "[LSP]",
+            fallbacks = {},
+            score_offset = 1,
+          },
+          buffer = {
+            name = "[BUF]",
+            max_items = 20,
+          },
+          path = {
+            name = "[PATH]",
+            opts = {
+              trailing_slash = false,
+              show_hidden_files_by_default = true,
+            },
+          },
+          snippets = { name = "[SNP]" },
+          cmdline = { name = "[CMD]" },
+        },
+      },
+      cmdline = {
+        enabled = true,
+        keymap = {
+          preset = "cmdline",
+          ["<C-j>"] = { "select_next", "show" },
+          ["<C-k>"] = { "select_prev", "show" },
+          ["<Tab>"] = { "show", "accept" },
+        },
+        sources = function()
+          local t = vim.fn.getcmdtype()
+          if t == "/" or t == "?" then
+            return { "buffer" }
+          end
+
+          if t == ":" then
+            return { "cmdline", "path" }
+          end
+          return {}
+        end,
+        completion = {
+          list = {
+            selection = {
+              auto_insert = false,
+            },
+          },
+          menu = {
+            auto_show = true,
+          },
+          ghost_text = {
+            enabled = true,
+          },
+        },
+      },
+      fuzzy = {
+        implementation = "prefer_rust_with_warning",
+        sorts = {
+          "exact",
+          "score",
+          function(a, b)
+            local _, a_under = a.label:find("^_+")
+            local _, b_under = b.label:find("^_+")
+            a_under = a_under or 0
+            b_under = b_under or 0
+            if a_under ~= b_under then
+              return a_under < b_under
+            end
+          end,
+          "sort_text",
+          "label",
         },
       },
     },
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/cmp-nvim-lsp-signature-help",
-    "onsails/lspkind.nvim",
-    {
-      "L3MON4D3/LuaSnip",
-      version = "v2.3",
-      build = "make install_jsregexp",
-    },
-    { "saadparwaiz1/cmp_luasnip" },
+    opts_extend = { "sources.default" },
+    config = function(_, opts)
+      local ls = require("luasnip")
+
+      require("luasnip.loaders.from_vscode").lazy_load()
+      -- Load snippets from custom directory: .config/nvim/snippets
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
+
+      vim.keymap.set({ "i", "s" }, "<C-l>", function()
+        ls.jump(1)
+      end, { silent = true })
+
+      vim.keymap.set({ "i", "s" }, "<C-h>", function()
+        ls.jump(-1)
+      end, { silent = true })
+
+      require("blink.cmp").setup(opts)
+    end,
   },
-  config = function()
-    local cmp = require("cmp")
-    local ls = require("luasnip")
-    local lspkind = require("lspkind")
-    local defaults = require("cmp.config.default")()
-
-    require("luasnip.loaders.from_vscode").lazy_load()
-
-    vim.keymap.set({ "i", "s" }, "<C-l>", function()
-      ls.jump(1)
-    end, { silent = true })
-
-    vim.keymap.set({ "i", "s" }, "<C-h>", function()
-      ls.jump(-1)
-    end, { silent = true })
-
-    cmp.setup({
-      window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      },
-      snippet = {
-        expand = function(args)
-          ls.lsp_expand(args.body)
-        end,
-      },
-      completion = {
-        completeopt = "menu,menuone,preview",
-      },
-      mapping = cmp.mapping.preset.insert({
-        ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-d>"] = cmp.mapping.scroll_docs(4),
-        ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-        ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-        ["<C-i>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<Tab>"] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace }),
-        ["<C-y>"] = cmp.config.disable,
-        ["<C-n>"] = cmp.config.disable,
-      }),
-      sources = cmp.config.sources({
-        { name = "lazydev", group_index = 0 },
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "path" },
-        { name = "nvim_lsp_signature_help" },
-      }, {
-        { name = "buffer" },
-      }),
-      sorting = defaults.sorting,
-      formatting = {
-        fields = { "kind", "abbr", "menu" },
-        expandable_indicator = true,
-        format = lspkind.cmp_format({
-          mode = "symbol",
-          maxwidth = 50,
-          ellipsis_char = "...",
-          show_labeldetails = true,
-          preset = "codicons",
-
-          ---@param entry cmp.Entry
-          ---@param vim_item vim.CompletedItem
-          before = function(entry, vim_item)
-            local source = ""
-
-            local name = ({
-              nvim_lsp = "LSP",
-              buffer = "BUF",
-              lazydev = "LZDV",
-              nvim_lsp_signature_help = "SIG",
-            })[entry.source.name]
-
-            if name ~= nil then
-              source = name
-            else
-              source = string.upper(entry.source.name)
-            end
-
-            vim_item.menu = "[" .. source .. "]"
-            return vim_item
-          end,
-        }),
-      },
-    })
-
-    local custom_mapping = {
-      ["<C-j>"] = {
-        c = function()
-          if cmp.visible() then
-            cmp.select_next_item()
-          else
-            cmp.complete()
-          end
-        end,
-      },
-      ["<C-k>"] = {
-        c = function()
-          if cmp.visible() then
-            cmp.select_prev_item()
-          else
-            cmp.complete()
-          end
-        end,
-      },
-      ["<Tab>"] = {
-        c = cmp.mapping.confirm({ select = false }),
-      },
-    }
-
-    cmp.setup.cmdline({ "/", "?" }, {
-      mapping = cmp.mapping.preset.cmdline(custom_mapping),
-      sources = {
-        { name = "buffer" },
-      },
-    })
-
-    cmp.setup.cmdline(":", {
-      mapping = cmp.mapping.preset.cmdline(custom_mapping),
-      sources = cmp.config.sources({
-        { name = "path" },
-      }, {
-        { name = "cmdline" },
-      }),
-      matching = {
-        disallow_fuzzy_matching = false,
-        disallow_fullfuzzy_matching = false,
-        disallow_partial_fuzzy_matching = false,
-        disallow_partial_matching = false,
-        disallow_prefix_unmatching = false,
-        disallow_symbol_nonprefix_matching = false,
-      },
-    })
-  end,
 }
