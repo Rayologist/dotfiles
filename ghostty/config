@@ -23,7 +23,8 @@ window-height = 30
 window-padding-x = 10,0
 window-padding-y = 10,0
 
-theme = tokyonight_moon
+theme = TokyoNight Moon
+# theme = Catppuccin Macchiato
 
 # MacOS
 macos-option-as-alt = true
