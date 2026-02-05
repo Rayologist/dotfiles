@@ -8,12 +8,19 @@
 !nvim/**
 
 !tmux/
-!tmux/**
-tmux/plugins/
+!tmux/tmux.conf
+!tmux/bin/tmux_sessionizer
 
 !oh-my-posh/
 !oh-my-posh/config.yml
+!oh-my-posh/status.zsh
 
 !cspell/
 !cspell/**
 cspell/dicts/node_modules
+
+!claude/
+!claude/**
+
+!zsh/
+!zsh/**
