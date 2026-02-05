@@ -1,29 +1,45 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
 final_space: true
+shell_integration: true
+enable_cursor_positioning: true
 version: 3
+
 blocks:
   - type: prompt
     alignment: left
     newline: true
     segments:
+      - type: status
+        style: plain
+        newline: true
+        background: transparent
+        options:
+          always_enabled: true
+          # status_template might be capturing more than just the exit code
+          # status_template: "{{ if ne .Code 0 }}{{ .Code }}{{ end }}"
+        # Only display when OMP_RENDER_STATUS=1 (a command was actually executed in the current cycle).
+        # Skip rendering in VS Code terminal.
+        template: >-
+          {{ if and (gt .Code 0) (eq (env "OMP_RENDER_STATUS") "1") (ne (env "TERM_PROGRAM") "vscode") }} <b>󱞩</b> <red> {{ .Code }}</> {{"\n"}}{{ end }}
+
       - type: path
         style: plain
+        # foreground: "#8bd5ca"
         foreground: blue
         background: transparent
         template: "{{ .Path }} "
-        properties:
+        options:
           style: full
 
       - type: git
         style: plain
-        foreground: yellow
+        foreground: "#f9e2af"
         background: transparent
         template: >-
-          {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}
-          <cyan>{{ if and (gt .Behind 0) (gt .Ahead 0) }}󰹹 {{ else if gt .Behind 0 }} {{ else if gt .Ahead 0 }} {{ end }}</>
+          {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<darkGray>{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }}</><cyan>{{ if and (gt .Behind 0) (gt .Ahead 0) }} 󰹹 {{ else if gt .Behind 0 }}  {{ else if gt .Ahead 0 }}  {{ end }}</>
 
-        properties:
+        options:
           branch_icon: ""
           commit_icon: "@"
           fetch_status: true
@@ -36,7 +52,6 @@ blocks:
         foreground: magenta
         background: transparent
         style: plain
-        # template: "" # \uef444
         template: "❯"
 
   - type: rprompt
@@ -46,7 +61,7 @@ blocks:
         # foreground: "#6CA35E"
         foreground: green
         template: "{{ if .PackageManagerIcon }}<darkGray>{{ .PackageManagerIcon }}</> {{ end }}  {{ .Full }} "
-        properties:
+        options:
           fetch_package_manager: true
 
       - type: go
@@ -59,7 +74,7 @@ blocks:
         style: plain
         foreground: blue
         template: "  {{ if .Error }}{{ .Error }}{{ else }}{{ .Major }}.{{ .Minor }}{{ end }} "
-        properties:
+        options:
           preferred_executable: luajit
 
       - type: python
@@ -82,13 +97,27 @@ secondary_prompt:
   template: "❯❯ "
 
 tooltips:
+  - type: aws
+    tips:
+      - aws
+      - terraform
+      - tofu
+    style: plain
+    foreground: "#FFA400"
+    template: "  {{.Profile}}{{if .Region}} ({{.Region}}){{end}}"
+    options:
+      display_default: true
+
   - type: kubectl
     style: plain
     tips:
       - kubectl
+      - helm
+      - kubectx
+      - kubens
     foreground: "#326CE5"
     template: " 󱃾 {{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}} "
-    properties:
+    options:
       context_aliases:
         __firstory_prod_arn__: firstory-production
         __firstory_staging_arn__: firstory-staging
