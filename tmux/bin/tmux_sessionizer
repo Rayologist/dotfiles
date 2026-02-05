@@ -1,19 +1,14 @@
 #!/usr/bin/env zsh
 
-search_paths=(
-  "$HOME/dev/firstory/codes"
-  "$HOME/dev/gil"
-  "$HOME/dev/heartbot"
-  "$HOME/.config"
-  "$HOME/dev/firstory/codes/experiment"
-  "$HOME/dev/prototypes"
-  "$HOME/dev/canary"
-  "$HOME/dev/open-source"
-)
+config_file="$HOME/.config/tmux/bin/paths.zsh"
 
-exclude_paths=(
-  # "$HOME/.config/stripe"
-)
+if [[ -f "$config_file" ]]; then
+    source "$config_file"
+else
+    echo "Error: config file not found: $config_file" >&2
+    read -k 1 -s "?Press any key to exit..."
+    exit 1
+fi
 
 switch_to() {
     if [[ -z $TMUX ]]; then
@@ -42,11 +37,13 @@ else
     selected=$(
       find "${search_paths[@]}" -mindepth 1 -maxdepth 1 -type d \
       | grep -vFf <(printf "%s\n" "${exclude_paths[@]}") \
+      | cat - <(printf "%s\n" "${append_paths[@]}") - \
       | fzf
     )
   else
     selected=$(
       find "${search_paths[@]}" -mindepth 1 -maxdepth 1 -type d \
+      | cat - <(printf "%s\n" "${append_paths[@]}") - \
       | fzf
   )
 fi
