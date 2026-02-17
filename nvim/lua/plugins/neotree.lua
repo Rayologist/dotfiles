@@ -18,12 +18,14 @@ return {
     window = {
       mappings = {
         ["h"] = "close_node",
+        ["l"] = "open",
         ["<space>"] = "none",
         ["<leader>y"] = {
           function(state)
             local node = state.tree:get_node()
-            local path = node:get_id()
-            vim.fn.setreg("+", path, "c")
+            local relative_path = vim.fn.fnamemodify(node.path, ":.")
+            vim.fn.setreg("+", relative_path, "c")
+            vim.notify("Copied: " .. relative_path)
           end,
           desc = "Copy Path to Clipboard",
         },
@@ -36,7 +38,6 @@ return {
         ["P"] = { "toggle_preview", config = { use_float = true } },
         ["<C-u>"] = { "scroll_preview", config = { direction = 20 } },
         ["<C-d>"] = { "scroll_preview", config = { direction = -20 } },
-        ["q"] = "cancel",
       },
     },
     default_component_configs = {
@@ -55,7 +56,7 @@ return {
           renamed = "R", -- this can only be used in the git_status source
           -- Status type
           untracked = "U",
-          ignored = "",
+          ignored = "",
           unstaged = "",
           staged = "",
           conflict = "",
@@ -87,7 +88,7 @@ return {
       {
         event = "file_opened",
         handler = function()
-          require("neo-tree.command").execute({ action = "close" })
+          -- require("neo-tree.command").execute({ action = "close" })
         end,
       },
     },
