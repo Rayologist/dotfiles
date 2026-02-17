@@ -27,6 +27,10 @@ vim.keymap.set({ "n", "v" }, "<leader>d", '"_d')
 
 vim.keymap.set({ "n", "v" }, "gw", "<C-w>w", { desc = "Go to next window or nth window" })
 
+-- disable native completion
+vim.keymap.set("i", "<C-n>", function() end, { desc = "Disable native completion" })
+vim.keymap.set("i", "<C-p>", function() end, { desc = "Disable native completion" })
+
 -- vim.keymap.set(
 --   "n",
 --   "<leader>fm",

@@ -22,9 +22,9 @@ return {
         preset = "none",
         ["<C-i>"] = { "show", "show_documentation", "hide_documentation" },
         ["<C-e>"] = { "hide" },
-        ["<C-y>"] = { "select_and_accept" },
-        ["<C-j>"] = { "select_next" },
-        ["<C-k>"] = { "select_prev" },
+        ["<CR>"] = { "accept", "fallback" },
+        ["<C-j>"] = { "select_next", "show" },
+        ["<C-k>"] = { "select_prev", "show" },
         ["<C-d>"] = { "scroll_documentation_down" },
         ["<C-u>"] = { "scroll_documentation_up" },
         ["<Tab>"] = { "fallback" },
@@ -115,7 +115,7 @@ return {
           preset = "cmdline",
           ["<C-j>"] = { "select_next", "show" },
           ["<C-k>"] = { "select_prev", "show" },
-          ["<Tab>"] = { "show", "accept" },
+          ["<Tab>"] = { "show", "accept", "fallback" },
         },
         sources = function()
           local t = vim.fn.getcmdtype()
